@@ -10,19 +10,11 @@ public class CategoriaDTO {
     private Long id;
     private String nome;
 
-    public Long getId() {
-        return id;
+    public CategoriaDTO() {
     }
 
-    public void setId(Long id) {
+    public CategoriaDTO(Long id, String nome) {
         this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
         this.nome = nome;
     }
 
@@ -31,20 +23,25 @@ public class CategoriaDTO {
         this.nome = categoria.getNome();
     }
 
-    public CategoriaDTO(Long id, String nome) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNome() {return nome;}
+
+    public void setNome(String nome) {
         this.nome = nome;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        CategoriaDTO that = (CategoriaDTO) o;
-        return id == that.id && Objects.equals(nome, that.nome);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, nome);
+    public String toString() {
+        return "CategoriaDTO{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                '}';
     }
 }
