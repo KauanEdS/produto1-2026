@@ -52,7 +52,7 @@ public class CategoriaService {
         entity.setNome(categoriaDTO.getNome());
 
         Categoria nova = categoriaRepository.save(entity);
-        return new CategoriaDTO(entity);
+        return new CategoriaDTO(nova);
     }
 
 

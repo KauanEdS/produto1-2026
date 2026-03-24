@@ -1,19 +1,28 @@
 package br.ifmg.produto1_2026.entities;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.Objects;
 
+@Entity
+@Table(name= "tb_produto")
+
 public class Produto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    @Column(columnDefinition = "TEXT")
     private String descricao;
     private Double preco;
     private String imgUrl;
+
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant criadoEm;
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant atualizadoEm;
 
     public Produto() {
     }
@@ -64,6 +73,25 @@ public class Produto {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+
+    public Instant getCriadoEm() {
+        return criadoEm;
+    }
+
+    public Instant getAtualizadoEm() {
+        return atualizadoEm;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.criadoEm = Instant.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.atualizadoEm = Instant.now();
     }
 
     @Override

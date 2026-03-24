@@ -28,6 +28,7 @@ public class ProdutoService {
         //Lista com os dados do BD
         Page<Produto> produtos = produtoRepository.findAll(pageable);
 
+
         return produtos.map(ProdutoDTO::new);
     }
 
@@ -50,9 +51,13 @@ public class ProdutoService {
 
         Produto entity = new Produto();
         entity.setNome(produtoDTO.getNome());
+        entity.setDescricao(produtoDTO.getDescricao());
+        entity.setPreco(produtoDTO.getPreco());
+        entity.setImgUrl(produtoDTO.getImgUrl());
 
-        Produto nova = produtoRepository.save(entity);
-        return new ProdutoDTO(entity);
+
+        Produto novo = produtoRepository.save(entity);
+        return new ProdutoDTO(novo);
     }
 
 
@@ -81,7 +86,10 @@ public class ProdutoService {
 
         Produto entity = produtoRepository.getReferenceById(id);
 
-        entity.setNome(dto.getNome());//sobrescrevi o nome antigo pelo nome
+        entity.setNome(dto.getNome());//sobrescreve o nome antigo pelo nome
+        entity.setDescricao(dto.getDescricao());
+        entity.setPreco(dto.getPreco());
+        entity.setImgUrl(dto.getImgUrl());
         entity = produtoRepository.save(entity);
         return new ProdutoDTO(entity);
 
