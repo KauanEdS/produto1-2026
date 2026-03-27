@@ -3,7 +3,9 @@ package br.ifmg.produto1_2026.entities;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name= "tb_produto")
@@ -23,6 +25,14 @@ public class Produto {
     private Instant criadoEm;
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant atualizadoEm;
+
+    @ManyToMany
+    @JoinTable(name = 'tb_produto_categoria', //nome da tabela muitos para muitos
+               joinColumns = @JoinColumn(name = 'id_produto'),
+               inverseJoinColumns = @JoinColumn(name = 'id_categoria'))
+
+    private Set<Categoria> categorias = new HashSet<Categoria>();
+
 
     public Produto() {
     }
@@ -84,6 +94,14 @@ public class Produto {
         return atualizadoEm;
     }
 
+    public Set<Categoria> getCategorias() {
+        return categorias;
+    }
+
+    public void setCategorias(Set<Categoria> categorias) {
+        this.categorias = categorias;
+    }
+
     @PrePersist
     public void prePersist() {
         this.criadoEm = Instant.now();
@@ -98,12 +116,12 @@ public class Produto {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Produto produto = (Produto) o;
-        return Objects.equals(id, produto.id) && Objects.equals(nome, produto.nome) && Objects.equals(descricao, produto.descricao) && Objects.equals(preco, produto.preco) && Objects.equals(imgUrl, produto.imgUrl);
+        return Objects.equals(id, produto.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, descricao, preco, imgUrl);
+        return Objects.hashCode(id);
     }
 
     @Override
