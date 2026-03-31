@@ -1,7 +1,10 @@
 package br.ifmg.produto1_2026.service;
 
+import br.ifmg.produto1_2026.dto.CategoriaDTO;
 import br.ifmg.produto1_2026.dto.ProdutoDTO;
+import br.ifmg.produto1_2026.entities.Categoria;
 import br.ifmg.produto1_2026.entities.Produto;
+import br.ifmg.produto1_2026.repositories.CategoriaRepository;
 import br.ifmg.produto1_2026.repositories.ProdutoRepository;
 import br.ifmg.produto1_2026.service.exception.ErroNoBancoDeDados;
 import br.ifmg.produto1_2026.service.exception.RegistroNaoEncontrado;
@@ -23,16 +26,18 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    @Transactional(readOnly = true)
     public Page<ProdutoDTO> findAll(Pageable pageable){
 
         //Lista com os dados do BD
         Page<Produto> produtos = produtoRepository.findAll(pageable);
 
-
         return produtos.map(ProdutoDTO::new);
     }
 
-    @Transactional(readOnly = true)
     public ProdutoDTO findById(Long id){
 
         //buscamos no BD a produto. O resultado é um objeto do tipo Optinal
@@ -50,11 +55,7 @@ public class ProdutoService {
     public ProdutoDTO insert (ProdutoDTO produtoDTO){
 
         Produto entity = new Produto();
-        entity.setNome(produtoDTO.getNome());
-        entity.setDescricao(produtoDTO.getDescricao());
-        entity.setPreco(produtoDTO.getPreco());
-        entity.setImgUrl(produtoDTO.getImgUrl());
-
+        copyDtoToEntity(produtoDTO, entity);
 
         Produto novo = produtoRepository.save(entity);
         return new ProdutoDTO(novo);
@@ -86,12 +87,23 @@ public class ProdutoService {
 
         Produto entity = produtoRepository.getReferenceById(id);
 
+        copyDtoToEntity(dto, entity);
+
+        entity = produtoRepository.save(entity);
+        return new ProdutoDTO(entity);
+
+    }
+
+    private void copyDtoToEntity(ProdutoDTO dto, Produto entity) {
         entity.setNome(dto.getNome());//sobrescreve o nome antigo pelo nome
         entity.setDescricao(dto.getDescricao());
         entity.setPreco(dto.getPreco());
         entity.setImgUrl(dto.getImgUrl());
-        entity = produtoRepository.save(entity);
-        return new ProdutoDTO(entity);
 
+        entity.getCategorias().clear();
+        for(CategoriaDTO catDto : dto.getCategorias()){
+            Categoria cat = categoriaRepository.getReferenceById(catDto.getId());
+            entity.getCategorias().add(cat);
+        }
     }
 }

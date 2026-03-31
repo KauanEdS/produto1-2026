@@ -1,7 +1,13 @@
 package br.ifmg.produto1_2026.service;
 
+import br.ifmg.produto1_2026.dto.CategoriaDTO;
+import br.ifmg.produto1_2026.dto.PerfilDTO;
 import br.ifmg.produto1_2026.dto.UsuarioDTO;
+import br.ifmg.produto1_2026.entities.Categoria;
+import br.ifmg.produto1_2026.entities.Perfil;
 import br.ifmg.produto1_2026.entities.Usuario;
+import br.ifmg.produto1_2026.repositories.CategoriaRepository;
+import br.ifmg.produto1_2026.repositories.PerfilRepository;
 import br.ifmg.produto1_2026.repositories.UsuarioRepository;
 import br.ifmg.produto1_2026.service.exception.ErroNoBancoDeDados;
 import br.ifmg.produto1_2026.service.exception.RegistroNaoEncontrado;
@@ -22,6 +28,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
 
     public Page<UsuarioDTO> findAll(Pageable pageable){
 
@@ -50,10 +59,7 @@ public class UsuarioService {
     public UsuarioDTO insert (UsuarioDTO usuarioDTO){
 
         Usuario entity = new Usuario();
-        entity.setNome(usuarioDTO.getNome());
-        entity.setTelefone(usuarioDTO.getTelefone());
-        entity.setEmail(usuarioDTO.getEmail());
-        entity.setSenha(usuarioDTO.getSenha());
+        copyDtoToEntity(usuarioDTO, entity);
 
 
         Usuario novo = usuarioRepository.save(entity);
@@ -86,12 +92,23 @@ public class UsuarioService {
 
         Usuario entity = usuarioRepository.getReferenceById(id);
 
+        copyDtoToEntity(dto, entity);
+
+        entity = usuarioRepository.save(entity);
+        return new UsuarioDTO(entity);
+
+    }
+
+    private void copyDtoToEntity(UsuarioDTO dto, Usuario entity) {
         entity.setNome(dto.getNome());//sobrescreve o nome antigo pelo nome
         entity.setTelefone(dto.getTelefone());
         entity.setEmail(dto.getEmail());
         entity.setSenha(dto.getSenha());
-        entity = usuarioRepository.save(entity);
-        return new UsuarioDTO(entity);
 
+        entity.getPerfis().clear();
+        for(PerfilDTO perfDto : dto.getPerfis()){
+            Perfil perf = perfilRepository.getReferenceById(perfDto.getId());
+            entity.getPerfis().add(perf);
+        }
     }
 }
