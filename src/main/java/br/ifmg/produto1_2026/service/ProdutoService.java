@@ -6,6 +6,7 @@ import br.ifmg.produto1_2026.entities.Categoria;
 import br.ifmg.produto1_2026.entities.Produto;
 import br.ifmg.produto1_2026.repositories.CategoriaRepository;
 import br.ifmg.produto1_2026.repositories.ProdutoRepository;
+import br.ifmg.produto1_2026.resources.ProdutoResource;
 import br.ifmg.produto1_2026.service.exception.ErroNoBancoDeDados;
 import br.ifmg.produto1_2026.service.exception.RegistroNaoEncontrado;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +35,17 @@ public class ProdutoService {
     private CategoriaRepository categoriaRepository;
 
     @Transactional(readOnly = true)
-    public Page<ProdutoDTO> findAll(Pageable pageable){
+    public Page<ProdutoDTO> findAll(Pageable pageableRequest){
 
         //Lista com os dados do BD
-        Page<Produto> produtos = produtoRepository.findAll(pageable);
+        Page<Produto> produtos = produtoRepository.findAll(pageableRequest);
 
-        return produtos.map(ProdutoDTO::new);
+        Pageable pageable = PageRequest.of(0,10, Sort.by("id") );
+
+        return produtos.map(produto -> new ProdutoDTO(produto)
+                .add( linkTo( methodOn(ProdutoResource.class).produtos(pageable) ).withSelfRel() )
+                .add( linkTo( methodOn(ProdutoResource.class).produto(produto.getId()) ).withRel("Obter produto pelo ID") )
+        );
     }
 
     public ProdutoDTO findById(Long id){
@@ -46,8 +56,17 @@ public class ProdutoService {
         //buscamos a produto dentro do objeto Optional
         Produto produto = opt.orElseThrow(() -> new RegistroNaoEncontrado("Produto não encontrada"));
 
+        ProdutoDTO dto = new ProdutoDTO(produto);
+
+        Pageable pageable = PageRequest.of(0,10, Sort.by("id") );
+
         //Convertemos a entidade em DTO
-        return new ProdutoDTO(produto);
+        return dto
+                .add(linkTo(methodOn(ProdutoResource.class).produto(produto.getId()) ).withSelfRel())
+                .add(linkTo(methodOn(ProdutoResource.class).produtos(pageable) ).withRel("Todos os produtos") )
+                .add(linkTo(methodOn(ProdutoResource.class).update(produto.getId(), dto) ).withRel("Atualizar o produto") )
+                .add(linkTo(methodOn(ProdutoResource.class).delete(produto.getId()) ).withRel("Apagar o produto") )
+                ;
     }
 
 
@@ -58,7 +77,16 @@ public class ProdutoService {
         copyDtoToEntity(produtoDTO, entity);
 
         Produto novo = produtoRepository.save(entity);
-        return new ProdutoDTO(novo);
+
+        Pageable pageable = PageRequest.of(0,10, Sort.by("id") );
+
+        return new ProdutoDTO(novo)
+                .add(linkTo(methodOn(ProdutoResource.class).insert(produtoDTO) ).withSelfRel())
+                .add(linkTo(methodOn(ProdutoResource.class).produto(novo.getId()) ).withRel("Busca pelo ID"))
+                .add(linkTo(methodOn(ProdutoResource.class).produtos(pageable) ).withRel("Todos os produtos") )
+                .add(linkTo(methodOn(ProdutoResource.class).update(novo.getId(), produtoDTO) ).withRel("Atualizar o produto") )
+                .add(linkTo(methodOn(ProdutoResource.class).delete(novo.getId()) ).withRel("Apagar o produto") )
+                ;
     }
 
 
@@ -89,8 +117,17 @@ public class ProdutoService {
 
         copyDtoToEntity(dto, entity);
 
+
         entity = produtoRepository.save(entity);
-        return new ProdutoDTO(entity);
+
+        Pageable pageable = PageRequest.of(0,10, Sort.by("id") );
+
+        return new ProdutoDTO(entity)
+                .add(linkTo(methodOn(ProdutoResource.class).update(id, dto) ).withSelfRel())
+                .add(linkTo(methodOn(ProdutoResource.class).produto( id ) ).withRel("Busca pelo ID"))
+                .add(linkTo(methodOn(ProdutoResource.class).produtos(pageable) ).withRel("Todos os produtos") )
+                .add(linkTo(methodOn(ProdutoResource.class).delete( id ) ).withRel("Apagar o produto") )
+                ;
 
     }
 

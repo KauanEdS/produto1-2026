@@ -83,6 +83,19 @@ public class ProdutoResource {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Endpoint para apagar um produto",
+            description = "A plataforma precisa disponibilizar um cadastro e produtos ....",
+            responses = {
+                    @ApiResponse(description = "Sucesso", responseCode = "204", content = {}),
+                    @ApiResponse(description = "Registro mal-feito", responseCode = "400"),
+                    @ApiResponse(description = "Não autorizado", responseCode = "401"),
+                    @ApiResponse(description = "Proibido no seu perfil", responseCode = "403"),
+                    @ApiResponse(description = "Não encontrado", responseCode = "404"),
+                    @ApiResponse(description = "Erro ao processar", responseCode = "422"),
+                    @ApiResponse(description = "Erro interno no servidor", responseCode = "500")
+            }
+    )
     public ResponseEntity<Void> delete(@PathVariable Long id){
 
 
@@ -90,7 +103,21 @@ public class ProdutoResource {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
+
+    @PostMapping(value ="/{id}", produces = "application/json")
+    @Operation(
+            summary = "Endpoint para atualizar um produto",
+            description = "A plataforma precisa disponibilizar um cadastro e produtos ....",
+            responses = {
+                    @ApiResponse(description = "OK", responseCode = "200"),
+                    @ApiResponse(description = "Registro mal-feito", responseCode = "400"),
+                    @ApiResponse(description = "Não autorizado", responseCode = "401"),
+                    @ApiResponse(description = "Proibido no seu perfil", responseCode = "403"),
+                    @ApiResponse(description = "Não encontrado", responseCode = "404"),
+                    @ApiResponse(description = "Erro ao processar", responseCode = "422"),
+                    @ApiResponse(description = "Erro interno no servidor", responseCode = "500")
+            }
+    )
     public ResponseEntity<ProdutoDTO> update(@PathVariable Long id, @RequestBody ProdutoDTO dto){
 
         ProdutoDTO retorno = produtoService.update(id,dto);
