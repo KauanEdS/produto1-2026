@@ -20,8 +20,8 @@ insert into tb_perfil(autoridade) values ('ROLE_ADMINISTRADOR');
 insert into tb_perfil(autoridade) values ('ROLE_VENDEDOR');
 insert into tb_perfil(autoridade) values ('ROLE_CLIENTE');
 
-insert into tb_usuario(nome, telefone, email, senha, criado_em) values ('Kauan', '3799122-2222','kauan.eduardosilveira3@gmail.com',123456,NOW());
-insert into tb_usuario(nome, telefone, email, senha, criado_em) values ('Maria', '3799122-3333','maria@gmail.com',123456,NOW());
+insert into tb_usuario(nome, telefone, email, senha, criado_em) values ('Kauan', '3799122-2222','kauan.eduardosilveira3@gmail.com','$2a$10$v5FFnZkLiLMqdYFVpQqLruGgZujxKHB3cpFttyAzVSZmPsRLQ2OSq',NOW());
+insert into tb_usuario(nome, telefone, email, senha, criado_em) values ('Maria', '3799122-3333','maria@gmail.com','$2a$10$v5FFnZkLiLMqdYFVpQqLruGgZujxKHB3cpFttyAzVSZmPsRLQ2OSq',NOW());
 
 insert into tb_usuario_perfil(id_usuario, id_perfil) values (1, 1);
 insert into tb_usuario_perfil(id_usuario, id_perfil) values (1, 2);
