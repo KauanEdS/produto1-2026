@@ -7,6 +7,7 @@ import br.ifmg.produto1_2026.dto.UsuarioInsertDTO;
 import br.ifmg.produto1_2026.entities.Categoria;
 import br.ifmg.produto1_2026.entities.Perfil;
 import br.ifmg.produto1_2026.entities.Usuario;
+import br.ifmg.produto1_2026.projections.UserDetailsProjection;
 import br.ifmg.produto1_2026.repositories.CategoriaRepository;
 import br.ifmg.produto1_2026.repositories.PerfilRepository;
 import br.ifmg.produto1_2026.repositories.UsuarioRepository;
@@ -17,6 +18,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -115,5 +119,20 @@ public class UsuarioService {
             Perfil perf = perfilRepository.getReferenceById(perfDto.getId());
             entity.getPerfis().add(perf);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        List<UserDetailsProjection> dados =
+        usuarioRepository.loadUserByUserName(username);
+
+        if(dados.isEmpty()){
+            throw new UsernameNotFoundException(username);
+        }
+
+        Usuario usuario = new Usuario();
+
+        return null;
     }
 }
