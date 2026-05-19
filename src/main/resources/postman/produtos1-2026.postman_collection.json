@@ -62,6 +62,16 @@
         {
           "name": "Delete",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
             "url": {
@@ -81,6 +91,16 @@
         {
           "name": "Insert",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
@@ -108,6 +128,16 @@
         {
           "name": "Update",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [],
             "body": {
@@ -209,17 +239,27 @@
         {
           "name": "Delete",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://{{host}}/produto/3",
+              "raw": "http://{{host}}/produto/2",
               "protocol": "http",
               "host": [
                 "{{host}}"
               ],
               "path": [
                 "produto",
-                "3"
+                "2"
               ]
             }
           },
@@ -228,11 +268,21 @@
         {
           "name": "Insert",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"nome\": \"\",\r\n    \"descricao\": \"\",\r\n    \"preco\": -3050,\r\n    \"imgUrl\": \"https://exemplo.com/img/livro.jpg\",\r\n    \"categorias\":[\r\n                {\"id\":4},\r\n                {\"id\":1}\r\n    ]\r\n\r\n}",
+              "raw": "{\r\n    \"nome\": \"teste\",\r\n    \"descricao\": \"teste\",\r\n    \"preco\": 10000,\r\n    \"imgUrl\": \"https://exemplo.com/img/livro.jpg\",\r\n    \"categorias\":[\r\n                {\"id\":4},\r\n                {\"id\":1}\r\n    ]\r\n\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -255,6 +305,16 @@
         {
           "name": "Update",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [],
             "body": {
@@ -267,14 +327,14 @@
               }
             },
             "url": {
-              "raw": "http://{{host}}/produto/5",
+              "raw": "http://{{host}}/produto/",
               "protocol": "http",
               "host": [
                 "{{host}}"
               ],
               "path": [
                 "produto",
-                "5"
+                ""
               ]
             }
           },
@@ -383,6 +443,16 @@
         {
           "name": "Send mail",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
@@ -474,18 +544,46 @@
       "item": [
         {
           "name": "oauth2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\t\r",
+                  "if (pm.response.code >= 200 && pm.response.code < 300){\r",
+                  "var json = JSON.parse(pm.response.text());\r",
+                  "pm.environment.set('token',json.access_token)\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "auth": {
               "type": "basic",
               "basic": [
                 {
                   "key": "password",
-                  "value": "myclientsecret",
+                  "value": "{{client-secret}}",
                   "type": "string"
                 },
                 {
                   "key": "username",
-                  "value": "myclientid",
+                  "value": "{{client-id}}",
                   "type": "string"
                 }
               ]
@@ -497,13 +595,13 @@
               "urlencoded": [
                 {
                   "key": "username",
-                  "value": "kauan.eduardosilveira3@gmail.com",
+                  "value": "{{username}}",
                   "type": "text",
                   "uuid": "1bf1881f-241e-4402-81e5-8572d3f7ad73"
                 },
                 {
                   "key": "password",
-                  "value": "123456",
+                  "value": "{{password}}",
                   "type": "text",
                   "uuid": "be65a6cd-94c5-4e44-b121-9c8b97570468"
                 },

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -70,6 +71,7 @@ public class ProdutoResource {
                     @ApiResponse(description = "Erro interno no servidor", responseCode = "500")
             }
     )
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRADOR','ROLE_VENDEDOR')")
     public ResponseEntity<ProdutoDTO> insert(@RequestBody ProdutoDTO dto){
 
         //inserindo mo BD e pegando o objeto inserido
@@ -96,6 +98,7 @@ public class ProdutoResource {
                     @ApiResponse(description = "Erro interno no servidor", responseCode = "500")
             }
     )
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRADOR','ROLE_VENDEDOR')")
     public ResponseEntity<Void> delete(@PathVariable Long id){
 
 
@@ -118,6 +121,7 @@ public class ProdutoResource {
                     @ApiResponse(description = "Erro interno no servidor", responseCode = "500")
             }
     )
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRADOR','ROLE_VENDEDOR')")
     public ResponseEntity<ProdutoDTO> update(@PathVariable Long id, @RequestBody ProdutoDTO dto){
 
         ProdutoDTO retorno = produtoService.update(id,dto);
