@@ -1,6 +1,7 @@
 package br.ifmg.produto1_2026.resources;
 
 import br.ifmg.produto1_2026.dto.ProdutoDTO;
+import br.ifmg.produto1_2026.dto.ProdutoListDTO;
 import br.ifmg.produto1_2026.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,7 +28,28 @@ public class ProdutoResource {
     @Autowired
     private ProdutoService produtoService;
 
+    //Novo ...
     @GetMapping(produces = "application/json")
+    @Operation(
+            summary = "Endpoint para inserir um produto",
+            description = "A plataforma precisa disponibilizar um cadastro e produtos ....",
+            responses = {
+                    @ApiResponse(description = "Lista retornada com sucesso", responseCode = "200"),
+                    @ApiResponse(description = "Erro interno", responseCode = "500")
+            }
+    )
+    public ResponseEntity<Page<ProdutoListDTO>> produtos(
+                        @RequestParam(value = "categoriasId", defaultValue = "0") String categoriasId,
+                        @RequestParam(value = "name", defaultValue = "") String name,
+                        Pageable pageable) {
+
+        Page<ProdutoListDTO> produtos =
+                produtoService.findAll(categoriasId, name, pageable);
+        return ResponseEntity.ok().body(produtos);
+    };
+
+    //Antigo...
+    @GetMapping(value = "/v1/",produces = "application/json")
     @Operation(
             summary = "Endpoint para inserir um produto",
             description = "A plataforma precisa disponibilizar um cadastro e produtos ....",

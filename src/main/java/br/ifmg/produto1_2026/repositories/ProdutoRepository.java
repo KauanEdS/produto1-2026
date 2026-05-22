@@ -21,7 +21,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>{
                           p.id,
                           p.nome,
                           p.preco,
-                          p.img_url
+                          p.img_url as imgUrl
                     FROM tb_produto p 
                     INNER JOIN tb_produto_categoria pc ON pc.id_produto = p.id
                     INNER JOIN tb_categoria c ON c.id = pc.id_categoria
@@ -43,7 +43,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>{
                           p.id,
                           p.nome,
                           p.preco,
-                          p.img_url
+                          p.img_url as imgUrl
                     FROM tb_produto p
                     INNER JOIN tb_produto_categoria pc ON pc.id_produto = p.id
                     INNER JOIN tb_categoria c ON c.id = pc.id_categoria

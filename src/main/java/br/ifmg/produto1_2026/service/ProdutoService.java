@@ -2,8 +2,10 @@ package br.ifmg.produto1_2026.service;
 
 import br.ifmg.produto1_2026.dto.CategoriaDTO;
 import br.ifmg.produto1_2026.dto.ProdutoDTO;
+import br.ifmg.produto1_2026.dto.ProdutoListDTO;
 import br.ifmg.produto1_2026.entities.Categoria;
 import br.ifmg.produto1_2026.entities.Produto;
+import br.ifmg.produto1_2026.projections.ProdutoProjection;
 import br.ifmg.produto1_2026.repositories.CategoriaRepository;
 import br.ifmg.produto1_2026.repositories.ProdutoRepository;
 import br.ifmg.produto1_2026.resources.ProdutoResource;
@@ -13,17 +15,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,39 @@ public class ProdutoService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    //Novo ...
+    @Transactional(readOnly = true)
+    public Page<ProdutoListDTO> findAll(String categoriasID, String name, Pageable pageableRequest){
+
+        //Convertemos uma string em uma lista de Longs.
+        List<Long> categoriasIDs = null;
+        if(categoriasIDs != null && !categoriasID.equals("0")){
+            categoriasIDs =
+                    Arrays.asList(
+                            categoriasID.split(","))
+                                    .stream().map(n->Long.valueOf(n)).toList();
+        }
+
+        //Lista com os dados do BD. Essa lista vem com dados em Projections
+        Page<ProdutoProjection> produtos = produtoRepository.searchProdutos(categoriasIDs, name, pageableRequest);
+
+        //Corverter os projections em DTOs, pois a camada de cima, só trabalha com DTOs
+        List<ProdutoListDTO> produtosDTO = produtos.stream().map(p -> new ProdutoListDTO(p)).toList();
+
+        return new PageImpl<>(produtosDTO, pageableRequest, produtos.getTotalPages());
+
+        /*
+        Pageable pageable = PageRequest.of(0,10, Sort.by("id") );
+
+        return produtos.stream().map(p -> new ProdutoListDTO(p)
+                .add( linkTo( methodOn(ProdutoResource.class).produtos(pageable) ).withSelfRel() )
+                .add( linkTo( methodOn(ProdutoResource.class).produto(p.getID()) ).withRel("Obter produto pelo ID") )
+        );
+        */
+    }
+
+
+    //Antigo...
     @Transactional(readOnly = true)
     public Page<ProdutoDTO> findAll(Pageable pageableRequest){
 
