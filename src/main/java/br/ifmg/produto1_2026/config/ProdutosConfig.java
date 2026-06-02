@@ -43,7 +43,7 @@ public class ProdutosConfig {
 
 
     //@Primary -- desambigua beans, indicando qual objeto o spring boot deve usar.
-    @Profile("dev")
+    @Profile({"dev", "test"})
     @TipoDoNotificador(value = TipoDeNotificacao.SMS)
     @Bean
     public Notificador notificacaoSMS(){

@@ -5,22 +5,19 @@ import br.ifmg.produto1_2026.entities.Perfil;
 public class PerfilDTO {
 
     private Long id;
-    private String autoridade;
+    private String nome;
 
     public PerfilDTO() {
     }
 
-    public PerfilDTO(Long id, String autoridade) {
+    public PerfilDTO(Long id, String nome) {
         this.id = id;
-        this.autoridade = autoridade;
+        this.nome = nome;
     }
 
-    public PerfilDTO(Perfil perfil ) {
+    public PerfilDTO(Perfil perfil) {
         this.id = perfil.getId();
-        this.autoridade = perfil.getNome();
-    }
-
-    public PerfilDTO(PerfilDTO perfilDTO) {
+        this.nome = perfil.getAuthority();
     }
 
     public Long getId() {
@@ -31,19 +28,19 @@ public class PerfilDTO {
         this.id = id;
     }
 
-    public String getAutoridade() {
-        return autoridade;
+    public String getNome() {
+        return nome;
     }
 
-    public void setAutoridade(String autoridade) {
-        this.autoridade = autoridade;
+    public void setNome(String autoridade) {
+        this.nome = autoridade;
     }
 
     @Override
     public String toString() {
         return "PerfilDTO{" +
                 "id=" + id +
-                ", autoridade='" + autoridade + '\'' +
+                ", nome='" + nome + '\'' +
                 '}';
     }
 }

@@ -56,10 +56,10 @@ import com.nimbusds.jose.proc.SecurityContext;
 @Configuration
 public class AuthorizationServerConfig {
 
-	@Value("${security.client-id}")
+	@Value("${security.client.id}")
 	private String clientId;
 
-	@Value("${security.client-secret}")
+	@Value("${security.client.secret}")
 	private String clientSecret;
 
 	@Value("${security.jwt.duration}")

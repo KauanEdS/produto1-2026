@@ -186,7 +186,7 @@
               }
             },
             "url": {
-              "raw": "http://{{host}}/produto?page=0&sort=nome&size=10",
+              "raw": "http://{{host}}/produto?page=0&sort=nome&size=10&direction=DESC&categoriasId=4",
               "protocol": "http",
               "host": [
                 "{{host}}"
@@ -209,8 +209,11 @@
                 },
                 {
                   "key": "direction",
-                  "value": "DES",
-                  "disabled": true
+                  "value": "DESC"
+                },
+                {
+                  "key": "categoriasId",
+                  "value": "4"
                 }
               ]
             }
@@ -622,6 +625,62 @@
               "path": [
                 "oauth2",
                 "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recuperar senha",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"kauan.eduardosilveira3@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}/auth/recover-token",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "auth",
+                "recover-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Digitar nova senha",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"c54c2559-1df2-41ee-90bc-d614def85599\",\r\n    \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}/auth/new-password",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "auth",
+                "new-password"
               ]
             }
           },

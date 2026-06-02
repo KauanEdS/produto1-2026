@@ -6,22 +6,27 @@ import org.springframework.security.core.GrantedAuthority;
 import java.time.Instant;
 import java.util.Objects;
 
-
 @Entity
-@Table(name= "tb_perfil")
+@Table(name = "tb_perfil")
 public class Perfil implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String autoridade;
+    private String nome;
+
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant criadoEm;
+
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant atualizadoEm;
 
     public Perfil() {
     }
 
-    public Perfil( Long id ,String nome) {
-        this.autoridade = nome;
+    public Perfil(Long id, String autoridade) {
         this.id = id;
+        this.nome = autoridade;
     }
 
     public Long getId() {
@@ -33,11 +38,11 @@ public class Perfil implements GrantedAuthority {
     }
 
     public String getNome() {
-        return autoridade;
+        return nome;
     }
 
     public void setNome(String nome) {
-        this.autoridade = nome;
+        this.nome = nome;
     }
 
     @Override
@@ -56,12 +61,12 @@ public class Perfil implements GrantedAuthority {
     public String toString() {
         return "Perfil{" +
                 "id=" + id +
-                ", nome='" + autoridade + '\'' +
+                ", nome='" + nome + '\'' +
                 '}';
     }
 
     @Override
     public String getAuthority() {
-        return autoridade;
+        return this.nome;
     }
 }
